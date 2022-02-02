@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MoviesAPI.Data.Services;
+using MoviesAPI.Data.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +14,60 @@ namespace MoviesAPI.Controllers
     [ApiController]
     public class ProducersController : ControllerBase
     {
-        // GET: api/<ProducersController>
+        private ProducerServices _producerServices;
+
+        public ProducersController(ProducerServices producerServices)
+        {
+            _producerServices = producerServices;
+        }
+
+        // GET: api/Producers
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetAllProducers()
         {
-            return new string[] { "value1", "value2" };
+            var producers = _producerServices.GetAllProducers();
+            return Ok(producers);
         }
 
-        // GET api/<ProducersController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/Producers/5
+        [HttpGet("{producerId}")]
+        public IActionResult GetProducerById(int producerId)
         {
-            return "value";
+            var producer = _producerServices.GetProducerById(producerId);
+            
+            if (producer == null)
+                return NotFound();
+
+            return Ok(producer);
         }
 
-        // POST api/<ProducersController>
+        // POST api/Producers
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult AddProducer([FromBody] ProducerVM producer)
         {
+            int producerId = _producerServices.AddProducer(producer);
+            var result = "{ \"producer_id\": " + producerId + " }";
+            return Ok(result);
         }
 
-        // PUT api/<ProducersController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/Producers/5
+        [HttpPut("{producerId}")]
+        public IActionResult UpdateProducer(int producerId, [FromBody] ProducerVM producer)
         {
+
+            return Ok();
         }
 
-        // DELETE api/<ProducersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE api/Producers/5
+        [HttpDelete("{producerId}")]
+        public IActionResult DeleteProducerById(int producerId)
         {
+            bool isDeleted = _producerServices.DeleteProducerById(producerId);
+
+            if (isDeleted == false)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

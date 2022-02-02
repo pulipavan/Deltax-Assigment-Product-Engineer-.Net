@@ -44,7 +44,7 @@ namespace MoviesAPI.Data.Services
             return _actorWithoutMovieVM;
         }
 
-        public void AddActor(ActorVM actor)
+        public int AddActor(ActorVM actor)
         {
             var _actor = new Actor()
             {
@@ -56,9 +56,11 @@ namespace MoviesAPI.Data.Services
 
             _context.Actors.Add(_actor);
             _context.SaveChanges();
+
+            return _actor.actor_id; 
         }
 
-        public Actor UpdateActor(int actorId, ActorVM actor)
+        public bool UpdateActor(int actorId, ActorVM actor)
         {
             var _actor = _context.Actors.FirstOrDefault(a => a.actor_id == actorId);
 
@@ -70,12 +72,14 @@ namespace MoviesAPI.Data.Services
                 _actor.gender = actor.gender;
 
                 _context.SaveChanges();
+
+                return true;
             }
 
-            return _actor;
+            return false;
         }
 
-        public void DeleteActorById(int actorId)
+        public bool DeleteActorById(int actorId)
         {
             var _actor = _context.Actors.FirstOrDefault(a => a.actor_id == actorId);
 
@@ -83,7 +87,10 @@ namespace MoviesAPI.Data.Services
             {
                 _context.Actors.Remove(_actor);
                 _context.SaveChanges();
+
+                return true;
             }
+            return false;
         }
     }
 }

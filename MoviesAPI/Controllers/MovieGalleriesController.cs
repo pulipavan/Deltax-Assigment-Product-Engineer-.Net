@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MoviesAPI.Data.Services;
+using MoviesAPI.Data.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +14,64 @@ namespace MoviesAPI.Controllers
     [ApiController]
     public class MovieGalleriesController : ControllerBase
     {
-        // GET: api/<MovieGalleriesController>
+        private MovieGalleryServices _movieGalleryServices;
+
+        public MovieGalleriesController(MovieGalleryServices movieGalleryServices)
+        {
+            _movieGalleryServices = movieGalleryServices;
+        }
+
+        // GET: api/MovieGalleries
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetAllMovieGalleries()
         {
-            return new string[] { "value1", "value2" };
+            var movieGalleries = _movieGalleryServices.GetAllMovieGalleries();
+            return Ok(movieGalleries);
         }
 
-        // GET api/<MovieGalleriesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/MovieGalleries/5
+        [HttpGet("{picId}")]
+        public IActionResult GetMovieGalleryById(int picId)
         {
-            return "value";
+            var movieGallery = _movieGalleryServices.GetMovieGalleryById(picId);
+
+            if (movieGallery == null)
+                return NotFound();
+
+            return Ok(movieGallery);
         }
 
-        // POST api/<MovieGalleriesController>
+        // POST api/MovieGalleries
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult AddMovieGallery([FromBody] MovieGalleryVM movieGallery)
         {
+            int picId = _movieGalleryServices.AddMovieGallery(movieGallery);
+            var result = "{ \"pic_id\": " + picId + " }";
+            return Ok(result);
         }
 
-        // PUT api/<MovieGalleriesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/MovieGalleries/5
+        [HttpPut("{picId}")]
+        public IActionResult UpdateMovieGallery(int picId, [FromBody] MovieGalleryVM movieGallery)
         {
+            bool isUpdated = _movieGalleryServices.UpdateMovieGallery(picId, movieGallery);
+
+            if (isUpdated == false)
+                return NotFound();
+
+            return Ok();
         }
 
-        // DELETE api/<MovieGalleriesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE api/MovieGalleries/5
+        [HttpDelete("{picId}")]
+        public IActionResult DeleteMovieGalleryById(int picId)
         {
+            bool isDeleted = _movieGalleryServices.DeleteMovieGalleryById(picId);
+
+            if (isDeleted == false)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

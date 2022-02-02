@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\MoviesAPI\\MoviesAPI.csproj": {}
+    "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\Deltax-Assigment-Product-Engineer-.Net\\MoviesAPI\\MoviesAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\MoviesAPI\\MoviesAPI.csproj": {
+    "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\Deltax-Assigment-Product-Engineer-.Net\\MoviesAPI\\MoviesAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\MoviesAPI\\MoviesAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\Deltax-Assigment-Product-Engineer-.Net\\MoviesAPI\\MoviesAPI.csproj",
         "projectName": "MoviesAPI",
-        "projectPath": "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\MoviesAPI\\MoviesAPI.csproj",
+        "projectPath": "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\Deltax-Assigment-Product-Engineer-.Net\\MoviesAPI\\MoviesAPI.csproj",
         "packagesPath": "C:\\Users\\Niranjan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\MoviesAPI\\obj\\",
+        "outputPath": "C:\\Users\\Niranjan\\source\\repos\\MoviesAPI\\Deltax-Assigment-Product-Engineer-.Net\\MoviesAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

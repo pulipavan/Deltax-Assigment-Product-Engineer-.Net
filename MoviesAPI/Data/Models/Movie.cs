@@ -13,7 +13,7 @@ namespace MoviesAPI.Data.Models
         public string movie_name { get; set; }
         public string description { get; set; }
         public DateTime date_of_release { get; set; }
-        public int producer_id { get; set; }
+        public int? producer_id { get; set; }
         public ICollection<MovieActor> movieactors { get; set; }
         public Producer producer { get; set; }
         public ICollection<MovieGallery> movie_galleries { get; set; }

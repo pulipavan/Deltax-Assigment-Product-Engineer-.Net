@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MoviesAPI.Data.Services;
+using MoviesAPI.Data.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +14,64 @@ namespace MoviesAPI.Controllers
     [ApiController]
     public class ActorsController : ControllerBase
     {
-        // GET: api/<ActorsController>
+        public ActorServices _actorServices;
+
+        public ActorsController(ActorServices actorServices)
+        {
+            _actorServices = actorServices;
+        }
+
+        // GET: api/Actors
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetAllActors()
         {
-            return new string[] { "value1", "value2" };
+            var actors = _actorServices.GetAllActors();
+            return Ok(actors);
         }
 
-        // GET api/<ActorsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/Actors/5
+        [HttpGet("{actorId}")]
+        public IActionResult GetActorById(int actorId)
         {
-            return "value";
+            var actor = _actorServices.GetActorById(actorId);
+
+            if (actor == null)
+                 return NotFound();
+
+            return Ok(actor);
         }
 
-        // POST api/<ActorsController>
+        // POST api/Actors
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult AddActor([FromBody] ActorVM actor)
         {
+            int actorId = _actorServices.AddActor(actor);
+            string result = "{ \"actor_id\": " + actorId + " }"; 
+            return Ok(result);
         }
 
-        // PUT api/<ActorsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/Actors/5
+        [HttpPut("{actorId}")]
+        public IActionResult UpdateActor(int actorId, [FromBody] ActorVM actor)
         {
+            bool isUpdated = _actorServices.UpdateActor(actorId, actor);
+            
+            if (isUpdated == false)
+                return NotFound();
+
+            return Ok();
         }
 
-        // DELETE api/<ActorsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE api/Actors>/5
+        [HttpDelete("{actorId}")]
+        public IActionResult Delete(int actorId)
         {
+            bool isDeleted = _actorServices.DeleteActorById(actorId);
+
+            if (isDeleted == false)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

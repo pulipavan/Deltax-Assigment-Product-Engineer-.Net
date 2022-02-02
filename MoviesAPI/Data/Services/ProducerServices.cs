@@ -26,46 +26,52 @@ namespace MoviesAPI.Data.Services
             return _context.Producers.FirstOrDefault(a => a.producer_id == producerId);
         }
 
-        public void AddProducer(ProducerVM actor)
+        public int AddProducer(ProducerVM producer)
         {
-            var _actor = new Producer()
+            var _producer = new Producer()
             {
-                producer_name = actor.producer_name,
-                company_name = actor.company_name,
-                date_of_birth = actor.date_of_birth,
-                gender = actor.gender
+                producer_name = producer.producer_name,
+                company_name = producer.company_name,
+                date_of_birth = producer.date_of_birth,
+                gender = producer.gender
             };
 
-            _context.Producers.Add(_actor);
+            _context.Producers.Add(_producer);
             _context.SaveChanges();
+
+            return _producer.producer_id;
         }
 
-        public Producer UpdateProducer(int actorId, ProducerVM actor)
+        public Producer UpdateProducer(int producerId, ProducerVM producer)
         {
-            var _actor = _context.Producers.FirstOrDefault(a => a.producer_id == actorId);
+            var _producer = _context.Producers.FirstOrDefault(a => a.producer_id == producerId);
 
-            if (_actor != null)
+            if (_producer != null)
             {
-                _actor.producer_name = actor.producer_name;
-                _actor.company_name = actor.company_name;
-                _actor.date_of_birth = actor.date_of_birth;
-                _actor.gender = actor.gender;
+                _producer.producer_name = producer.producer_name;
+                _producer.company_name = producer.company_name;
+                _producer.date_of_birth = producer.date_of_birth;
+                _producer.gender = producer.gender;
 
                 _context.SaveChanges();
             }
 
-            return _actor;
+            return _producer;
         }
 
-        public void DeleteProducerById(int producerId)
+        public bool DeleteProducerById(int producerId)
         {
-            var _actor = _context.Producers.FirstOrDefault(a => a.producer_id == producerId);
+            var _producer = _context.Producers.FirstOrDefault(a => a.producer_id == producerId);
 
-            if (_actor != null)
+            if (_producer != null)
             {
-                _context.Producers.Remove(_actor);
+                _context.Producers.Remove(_producer);
                 _context.SaveChanges();
+
+                return true;
             }
+
+            return false;
         }
     }
 }

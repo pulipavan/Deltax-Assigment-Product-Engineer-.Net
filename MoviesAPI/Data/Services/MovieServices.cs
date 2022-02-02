@@ -6,13 +6,13 @@ using MoviesAPI.Data;
 using MoviesAPI.Data.Models;
 using MoviesAPI.Data.ViewModels;
 
-namespace MoviesAPI.Movies.Services
+namespace MoviesAPI.Data.Services
 {
-    public class MovieService
+    public class MovieServices
     {
         private AppDbContext _context;
 
-        public MovieService(AppDbContext context)
+        public MovieServices(AppDbContext context)
         {
             _context = context;
         }
@@ -23,6 +23,7 @@ namespace MoviesAPI.Movies.Services
             {
                 movie_id = movie.movie_id,
                 movie_name = movie.movie_name,
+                description = movie.description,
                 date_of_release = movie.date_of_release,
                 movieactors = movie.movieactors.Select(ma => ma.actor.actor_name).ToList(),
                 producer_name = movie.producer.producer_name,
@@ -38,6 +39,7 @@ namespace MoviesAPI.Movies.Services
             {
                 movie_id = movie.movie_id,
                 movie_name = movie.movie_name,
+                description = movie.description,
                 date_of_release = movie.date_of_release,
                 movieactors = movie.movieactors.Select(ma => ma.actor.actor_name).ToList(),
                 producer_name = movie.producer.producer_name,
@@ -47,7 +49,7 @@ namespace MoviesAPI.Movies.Services
             return _movieWithNamesVM;
         }
 
-        public void AddMovie(MovieVM movie)
+        public int AddMovie(MovieVM movie)
         {
             var _movie = new Movie()
             {
@@ -80,6 +82,72 @@ namespace MoviesAPI.Movies.Services
                 _context.Movie_galleries.Add(_movie_gallery);
                 _context.SaveChanges();
             }
+
+            return _movie.movie_id;
+        }
+
+        public bool UpdateMovie(int movieId, MovieVM movie)
+        {
+            var _movie = _context.Movies.FirstOrDefault(m => m.movie_id == movieId);
+
+            if (_movie != null)
+            {
+                _movie.movie_name = movie.movie_name;
+                _movie.description = movie.description;
+                _movie.date_of_release = movie.date_of_release;
+                _movie.producer_id = movie.producer_id;
+
+                _context.SaveChanges();
+
+                var _movieActors = _context.MovieActors.Where(ma => ma.movie_id == movieId);
+                _context.MovieActors.RemoveRange(_movieActors);
+                _context.SaveChanges();
+
+                foreach (var actorId in movie.actor_ids)
+                {
+                    var _movie_actors = new MovieActor()
+                    {
+                        movie_id = _movie.movie_id,
+                        actor_id = actorId
+                    };
+                    _context.MovieActors.Add(_movie_actors);
+                    _context.SaveChanges();
+                }
+
+                var _movieImages = _context.Movie_galleries.Where(ma => ma.movie_id == movieId);
+                _context.Movie_galleries.RemoveRange(_movieImages);
+                _context.SaveChanges();
+
+                foreach (var path in movie.movie_image_paths)
+                {
+                    var _movie_gallery = new MovieGallery()
+                    {
+                        movie_id = _movie.movie_id,
+                        pic_path = path
+                    };
+                    _context.Movie_galleries.Add(_movie_gallery);
+                    _context.SaveChanges();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool DeleteMovieById(int movieId)
+        {
+            var _movie = _context.Movies.FirstOrDefault(m => m.movie_id == movieId);
+
+            if(_movie != null)
+            {
+                _context.Movies.Remove(_movie);
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

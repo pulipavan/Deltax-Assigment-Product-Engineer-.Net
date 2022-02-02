@@ -21,7 +21,7 @@ namespace MoviesAPI.Data
                 .HasOne(m => m.producer)
                 .WithMany()
                 .HasForeignKey(m => m.producer_id)
-                .OnDelete(DeleteBehavior.ClientSetNull); 
+                .OnDelete(DeleteBehavior.SetNull); 
 
             modelBuilder.Entity<MovieGallery>()
                 .HasOne(mg => mg.movie)

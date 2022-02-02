@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MoviesAPI.Data.Services;
+using MoviesAPI.Data.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +14,64 @@ namespace MoviesAPI.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        // GET: api/<MoviesController>
+        private MovieServices _movieServices;
+
+        public MoviesController(MovieServices movieServices)
+        {
+            _movieServices = movieServices;
+        }
+
+        // GET: api/MovieGalleries
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetAllMovies()
         {
-            return new string[] { "value1", "value2" };
+            var movieGalleries = _movieServices.GetAllMovies();
+            return Ok(movieGalleries);
         }
 
-        // GET api/<MoviesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/MovieGalleries/5
+        [HttpGet("{movieId}")]
+        public IActionResult GetMovieById(int movieId)
         {
-            return "value";
+            var movie = _movieServices.GetMovieById(movieId);
+
+            if (movie == null)
+                return NotFound();
+
+            return Ok(movie);
         }
 
-        // POST api/<MoviesController>
+        // POST api/MovieGalleries
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult AddMovie([FromBody] MovieVM movie)
         {
+            int movieId = _movieServices.AddMovie(movie);
+            var result = "{ \"movie_id\": " + movieId + " }";
+            return Ok(result);
         }
 
-        // PUT api/<MoviesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/MovieGalleries/5
+        [HttpPut("{movieId}")]
+        public IActionResult UpdateMovie(int movieId, [FromBody] MovieVM movie)
         {
+            bool isUpdated = _movieServices.UpdateMovie(movieId, movie);
+
+            if (isUpdated == false)
+                return NotFound();
+
+            return Ok();
         }
 
-        // DELETE api/<MoviesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE api/MovieGalleries/5
+        [HttpDelete("{movieId}")]
+        public IActionResult DeleteMovieById(int movieId)
         {
+            bool isDeleted = _movieServices.DeleteMovieById(movieId);
+
+            if (isDeleted == false)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MoviesAPI.Data;
+using MoviesAPI.Data.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +42,10 @@ namespace MoviesAPI
 
             services.AddDbContext<AppDbContext>(options => options.UseMySql(mySqlConnectionStr, ServerVersion.AutoDetect(mySqlConnectionStr)));
             
-            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+            services.AddTransient<ActorServices>();
+            services.AddTransient<ProducerServices>();
+            services.AddTransient<MovieGalleryServices>();
+            services.AddTransient<MovieServices>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

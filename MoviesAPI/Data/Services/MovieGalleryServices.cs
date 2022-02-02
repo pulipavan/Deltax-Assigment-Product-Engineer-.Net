@@ -20,6 +20,7 @@ namespace MoviesAPI.Data.Services
         {
             var _movieGalleryWithMovieVMs =  _context.Movie_galleries.Select(movieGallery => new MovieGalleryWithMovieVM()
             {
+                pic_id = movieGallery.pic_id,
                 pic_path = movieGallery.pic_path,
                 movie_name = movieGallery.movie.movie_name
             }).ToList();
@@ -32,6 +33,7 @@ namespace MoviesAPI.Data.Services
         {
             var _movieGalleryWithMovieVM = _context.Movie_galleries.Where(a => a.pic_id == picId).Select(movieGallery => new MovieGalleryWithMovieVM()
             {
+                pic_id = movieGallery.pic_id,
                 pic_path = movieGallery.pic_path,
                 movie_name = movieGallery.movie.movie_name
             }).FirstOrDefault();
@@ -40,7 +42,7 @@ namespace MoviesAPI.Data.Services
             
         }
 
-        public void AddMovieGallery(MovieGalleryVM movieGallery)
+        public int AddMovieGallery(MovieGalleryVM movieGallery)
         {
             var _movieGallery = new MovieGallery()
             {
@@ -50,9 +52,11 @@ namespace MoviesAPI.Data.Services
 
             _context.Movie_galleries.Add(_movieGallery);
             _context.SaveChanges();
+
+            return _movieGallery.pic_id;
         }
 
-        public MovieGallery UpdateMovieGallery(int picId, MovieGalleryVM movieGallery)
+        public bool UpdateMovieGallery(int picId, MovieGalleryVM movieGallery)
         {
             var _movieGallery = _context.Movie_galleries.FirstOrDefault(a => a.pic_id == picId);
 
@@ -62,12 +66,14 @@ namespace MoviesAPI.Data.Services
                 _movieGallery.movie_id = movieGallery.movie_id;
 
                 _context.SaveChanges();
+
+                return true;
             }
 
-            return _movieGallery;
+            return false;
         }
 
-        public void DeleteMovieGalleryById(int picId)
+        public bool DeleteMovieGalleryById(int picId)
         {
             var _movieGallery = _context.Movie_galleries.FirstOrDefault(a => a.pic_id == picId);
 
@@ -75,7 +81,11 @@ namespace MoviesAPI.Data.Services
             {
                 _context.Movie_galleries.Remove(_movieGallery);
                 _context.SaveChanges();
+
+                return true;
             }
+
+            return false;
         }
     }
 }
